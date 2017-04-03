@@ -1,0 +1,15 @@
+<!--main.wxml--> 
+<view class="whole">
+  <view class="canvas">
+    <image class="newimage" src="{{chooseimagePaths}}" mode="aspectFit"/>
+  </view>
+  <view class="tool">
+    <image bindtap="chooseimage" class="camera-icon" src="../../image/camera.png"></image>
+  </view>
+</view>
+<action-sheet bindchange="hideActionSheet" hidden="{{!showActionsSheet}}">
+  <block wx:for="{{actionSheetItems}}" wx:key="*this">
+    <action-sheet-item bindtap="{{item.bindtap}}">{{item.txt}}</action-sheet-item>
+  </block>
+  <action-sheet-cancel class="cancel">取消</action-sheet-cancel>
+</action-sheet>

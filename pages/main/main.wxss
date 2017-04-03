@@ -1,0 +1,24 @@
+/**main.wxss**/
+.whole {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40rpx;
+}
+
+.canvas {
+  height: 1050rpx;
+}
+
+.newimage {
+  width: 700rpx;
+  height: 1000rpx;
+}
+
+.camera-icon {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+}
