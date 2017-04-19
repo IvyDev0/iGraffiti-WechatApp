@@ -1,7 +1,3 @@
-// 当前功能：从外部访问服务器的时候处理图片
-// Todo：监听是否有被上传的文件，有则处理文件，并传回处理后的路径
-//       处理函数还需要多一个输出文件名称的参数
-
 var http = require('http');//引入http模块
 var process = require('child_process');//引入多线程
 
@@ -12,11 +8,12 @@ var server = http.createServer(function(req,res){
         req用来接受客户端数据
         res用来向客户端发送服务器数据
     */
-
+    var input = "./horse.jpg";
+    var output = "./output.jpg";
     // 在后台创建连接成功显示
     console.log('有客户端连接');
     // 执行处理图像进程
-    process.exec("./edge.sh ./horse.jpg")
+    process.exec("./edge.sh" + " " + input + " " + output);
 
     // 一参是http请求状态，200连接成功
     // 连接成功后向客户端写入头信息
@@ -24,7 +21,7 @@ var server = http.createServer(function(req,res){
         'content-type' : 'text/html;charset="utf-8"'
     });
 
-    res.write('这是正文部分');//显示给客户端
+    res.write(output);//显示给客户端
     res.end();
 
 }).listen(8888);

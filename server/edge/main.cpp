@@ -3,7 +3,7 @@
 #include "opencv2/highgui/highgui.hpp"
 using namespace cv;
 
-const char* TITLE = "Sobel Demo - Simple Edge Detector";
+//const char* TITLE = "Sobel Demo - Simple Edge Detector";
 Mat g_grad, g_grad_threshold;
 int g_threshold = 35;
 
@@ -57,8 +57,8 @@ int main(int argc, char* argv[]) {
     // createTrackbar("threshold", TITLE, &g_threshold, 255, on_trackbar);
     // imshow(TITLE, g_grad_threshold);
     // waitKey(0);
-    // 直接输出处理后的图像
-    imwrite("./after.jpg", g_grad_threshold);
+    // 输出指定路径
+    imwrite(argv[2], g_grad_threshold);
 
     return 0;
 
