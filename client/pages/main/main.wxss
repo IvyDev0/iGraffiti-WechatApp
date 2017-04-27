@@ -40,16 +40,16 @@ page {
     background-size: 100% 100%;
 }
 
-.pencil {background-image: url(../../image/pencil-black.png);}
+.pencil {background-image: url('https://www.pihuataotao.cn/pencil-black.png');}
 
-.pen {background-image: url(../../image/pen-black.png);}
+.pen {background-image: url('https://www.pihuataotao.cn/pen-black.png');}
 
-.brush {background-image: url(../../image/brush-black.png);}
+.brush {background-image: url('https://www.pihuataotao.cn/brush-black.png');}
 
-.eraser {background-image: url(../../image/eraser-black.png);}
+.eraser {background-image: url('https://www.pihuataotao.cn/eraser-black.png');}
 
 .palette {
-    background-image: url(../../image/palette-black.png);
+    background-image: url('https://www.pihuataotao.cn/palette-black.png');
     z-index: 100;
 }
 
