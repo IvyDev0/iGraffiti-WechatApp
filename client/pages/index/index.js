@@ -5,12 +5,6 @@ Page({
   data: {
     userInfo: {}
   },
-  //事件处理函数
-  userlogo: function() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
-  },
   getin: function() {
     wx.navigateTo({
       url: '../main/main'
