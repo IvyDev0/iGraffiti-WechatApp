@@ -6,7 +6,6 @@
         bindtouchstart="touchStart"
         bindtouchmove="touchMove"
         bindtouchend="touchEnd">
-        
     </canvas>
   </view>
   <view class="canvas_tools">

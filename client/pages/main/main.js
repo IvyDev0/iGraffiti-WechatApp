@@ -425,7 +425,7 @@ Page({
               imageSize.imageHeight = windowHeight;
               imageSize.imageWidth = (windowHeight * originalWidth) / originalHeight;
             }
-            ctx.drawImage(e.Paths, 0, 0, imageSize.imageWidth, imageSize.imageHeight)
+            ctx.drawImage(e.Paths, 0, (windowHeight-imageSize.imageHeight)/2, imageSize.imageWidth, imageSize.imageHeight)
             ctx.draw()
           }
         })
