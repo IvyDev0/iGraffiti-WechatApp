@@ -6,7 +6,7 @@
         bindtouchstart="touchStart"
         bindtouchmove="touchMove"
         bindtouchend="touchEnd">
-        <image class="newimage" src="{{Paths}}" mode="aspectFit"/>
+        
     </canvas>
   </view>
   <view class="canvas_tools">
