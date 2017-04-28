@@ -206,24 +206,24 @@ Page({
         timingFunction: 'ease-out'
       })*/
     anim_palette.rotateZ(180).step();
-    anim_c01.translate(50, 50).rotateZ(360).opacity(1).step();
-    anim_c02.translate(10, 70).rotateZ(360).opacity(1).step();
-    anim_c03.translate(50, 90).rotateZ(360).opacity(1).step();
-    anim_c04.translate(10, 110).rotateZ(360).opacity(1).step();
-    anim_c05.translate(50, 130).rotateZ(360).opacity(1).step();
-    anim_c06.translate(10, 150).rotateZ(360).opacity(1).step();
-    anim_c07.translate(50, 170).rotateZ(360).opacity(1).step();
-    anim_c08.translate(10, 190).rotateZ(360).opacity(1).step();
-    anim_c09.translate(50, 210).rotateZ(360).opacity(1).step();
-    anim_c10.translate(10, 230).rotateZ(360).opacity(1).step();
-    anim_c11.translate(50, 250).rotateZ(360).opacity(1).step();
-    anim_c12.translate(10, 270).rotateZ(360).opacity(1).step();
-    anim_c13.translate(50, 290).rotateZ(360).opacity(1).step();
-    anim_c14.translate(10, 310).rotateZ(360).opacity(1).step();
-    anim_c15.translate(50, 330).rotateZ(360).opacity(1).step();
-    anim_c16.translate(10, 350).rotateZ(360).opacity(1).step();
-    anim_c17.translate(50, 370).rotateZ(360).opacity(1).step();
-    anim_c18.translate(10, 390).rotateZ(360).opacity(1).step();
+    anim_c01.translate(10, 55).rotateZ(360).opacity(1).step();
+    anim_c02.translate(10, 115).rotateZ(360).opacity(1).step();
+    anim_c03.translate(30, 85).rotateZ(360).opacity(1).step();
+    anim_c04.translate(50, 55).rotateZ(360).opacity(1).step();
+    anim_c05.translate(50, 115).rotateZ(360).opacity(1).step();
+    anim_c06.translate(70, 85).rotateZ(360).opacity(1).step();
+    anim_c07.translate(90, 55).rotateZ(360).opacity(1).step();
+    anim_c08.translate(90, 115).rotateZ(360).opacity(1).step();
+    anim_c09.translate(110, 85).rotateZ(360).opacity(1).step();
+    anim_c10.translate(130, 55).rotateZ(360).opacity(1).step();
+    anim_c11.translate(130, 115).rotateZ(360).opacity(1).step();
+    anim_c12.translate(150, 85).rotateZ(360).opacity(1).step();
+    anim_c13.translate(170, 55).rotateZ(360).opacity(1).step();
+    anim_c14.translate(170, 115).rotateZ(360).opacity(1).step();
+    anim_c15.translate(190, 85).rotateZ(360).opacity(1).step();
+    anim_c16.translate(210, 55).rotateZ(360).opacity(1).step();
+    anim_c17.translate(210, 115).rotateZ(360).opacity(1).step();
+    anim_c18.translate(230, 85).rotateZ(360).opacity(1).step();
     /*anim_c19.translate(50,410).rotateZ(360).opacity(1).step();
       anim_c20.translate(10,430).rotateZ(360).opacity(1).step();
       anim_c21.translate(50,450).rotateZ(360).opacity(1).step();
@@ -413,8 +413,8 @@ Page({
           success: function (res) {
             // success
             var imageSize={};
-            var windowWidth = res.windowWidth;
-            var windowHeight = res.windowHeight - 75;
+            var windowWidth = res.windowWidth-40;
+            var windowHeight = res.windowHeight - 120;
             var windowscale = windowHeight / windowWidth
             if (originalScale < windowscale) {//图片高宽比小于屏幕高宽比 
               //图片缩放后的宽为屏幕宽 
@@ -425,7 +425,7 @@ Page({
               imageSize.imageHeight = windowHeight;
               imageSize.imageWidth = (windowHeight * originalWidth) / originalHeight;
             }
-            ctx.drawImage(e.Paths, 0, (windowHeight-imageSize.imageHeight)/2, imageSize.imageWidth, imageSize.imageHeight)
+            ctx.drawImage(e.Paths, 20, (windowHeight-imageSize.imageHeight)/2, imageSize.imageWidth, imageSize.imageHeight)
             ctx.draw()
           }
         })
