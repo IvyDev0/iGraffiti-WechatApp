@@ -408,24 +408,30 @@ Page({
         // success
         var originalWidth = res.width;//图片原始宽 
         var originalHeight = res.height;//图片原始高 
-        var originalScale = originalHeight/originalWidth;//图片高宽比
+        var originalScale = originalHeight / originalWidth;//图片高宽比
         wx.getSystemInfo({
           success: function (res) {
             // success
-            var imageSize={};
-            var windowWidth = res.windowWidth-40;
-            var windowHeight = res.windowHeight - 120;
+            var imageSize = {};
+            // 左右留白各10
+            var windowWidth = res.windowWidth - 20;
+            // 去掉最高157+留白上10下10
+            var windowHeight = res.windowHeight - 177;
+            // 显示区域高宽比
             var windowscale = windowHeight / windowWidth
             if (originalScale < windowscale) {//图片高宽比小于屏幕高宽比 
               //图片缩放后的宽为屏幕宽 
               imageSize.imageWidth = windowWidth;
               imageSize.imageHeight = (windowWidth * originalHeight) / originalWidth;
+              // 路径+左上角x+左上角y+宽度+高度
+              ctx.drawImage(e.Paths, 10, (res.windowHeight - imageSize.imageHeight - 157) / 2, imageSize.imageWidth, imageSize.imageHeight)
             } else {//图片高宽比大于屏幕高宽比 
               //图片缩放后的高为屏幕高 
               imageSize.imageHeight = windowHeight;
               imageSize.imageWidth = (windowHeight * originalWidth) / originalHeight;
+              // 路径+左上角x+左上角y+宽度+高度
+              ctx.drawImage(e.Paths, (res.windowWidth - imageSize.imageWidth) / 2, 10, imageSize.imageWidth, imageSize.imageHeight)
             }
-            ctx.drawImage(e.Paths, 20, (windowHeight-imageSize.imageHeight)/2, imageSize.imageWidth, imageSize.imageHeight)
             ctx.draw()
           }
         })

@@ -1,1 +1,6 @@
-{}
+{
+    "navigationBarBackgroundColor": "#000000",
+    "navigationBarTitleText": "iGraffiti",
+    "navigationBarTextStyle":"white",
+    "enablePullDownRefresh":false
+}

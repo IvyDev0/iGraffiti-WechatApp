@@ -1,8 +1,8 @@
 <!--main.wxml--> 
 <view class="container">
   <view class="canvas_area">
-    <canvas disable-scroll="true" canvas-id="myCanvas" class="myCanvas"
-        disable-scroll="false"
+    <canvas canvas-id="myCanvas" class="myCanvas"
+        disable-scroll="true"
         bindtouchstart="touchStart"
         bindtouchmove="touchMove"
         bindtouchend="touchEnd">
