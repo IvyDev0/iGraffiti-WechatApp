@@ -1,6 +1,6 @@
 //main.js
 //获取应用实例
-var app = getApp()
+// var app = getApp()
 const ctx = wx.createCanvasContext('myCanvas')
 // 步数参数，要不要写进page的data里面？
 // var step = 0
@@ -12,6 +12,7 @@ Page({
     color: '#000000', //画笔颜色默认值
     isPopping: false, //是否已经弹出
     isPenPopping: false, //画笔滑动条是否弹出
+    animSlider: {},
     animPalette: {},  //旋转动画
     //item位移,透明度
     animC01: {}, animC02: {}, animC03: {}, animC04: {}, animC05: {}, animC06: {}, animC07: {}, animC08: {}, animC09: {}, animC10: {}, animC11: {}, animC12: {}, animC13: {}, animC14: {}, animC15: {}, animC16: {}, animC17: {}, animC18: {},
@@ -131,6 +132,7 @@ Page({
 
     }
   },
+  // 保存图片
   saveImage: function () {
     wx.canvasToTempFilePath({
       canvasId: 'myCanvas',
@@ -148,7 +150,8 @@ Page({
   clearCanvas: function () {
     this.isClear = true;
   },
-  penSelect: function (e) { //更改画笔大小的方法
+  //更改画笔大小的方法
+  penSelect: function (e) {
     console.log(e.currentTarget);
     this.setData({
       // pen: parseInt(e.currentTarget.dataset.param)
@@ -156,17 +159,31 @@ Page({
     });
     this.isClear = false;
   },
-  colorSelect: function (e) { //更改画笔颜色的方法
+  //更改画笔颜色的方法
+  colorSelect: function (e) {
     console.log(e.currentTarget);
     this.setData({
       color: e.currentTarget.dataset.param
     });
     this.isClear = false;
   },
+  // 显示画笔滑条
   showPenSlider: function () {
-    if (this.data.isPenPopping) { }
-    else { }
+    console.log(this.data.isPenPopping)
+    if (this.data.isPenPopping) {
+      this.hideSlider();
+      this.setData({
+        isPenPopping: false
+      });
+    }
+    else {
+      this.showSlider();
+      this.setData({
+        isPenPopping: true
+      });
+    }
   },
+  // 显示调色板
   palette: function () {
     if (this.data.isPopping) {
       this.fold();
@@ -181,6 +198,29 @@ Page({
       })
     }
   },
+  // 显示滑条动画
+  showSlider: function () {
+    var anim_slider = wx.createAnimation({
+      duration: 300,
+      timingFunction: 'ease-out'
+    })
+    anim_slider.opacity(1).step();
+    this.setData({
+      animSlider: anim_slider.export()
+    })
+  },
+  // 隐藏滑条动画
+  hideSlider: function () {
+    var anim_slider = wx.createAnimation({
+      duration: 300,
+      timingFunction: 'ease-out'
+    })
+    anim_slider.opacity(0).step();
+    this.setData({
+      animSlider: anim_slider.export()
+    })
+  },
+  // 弹出调色板动画
   pop: function () {
     var anim_palette = wx.createAnimation({
       duration: 500,  //动画持续时间500ms
@@ -329,6 +369,7 @@ Page({
         animC25: anim_c25.export(),*/
     })
   },
+  // 折叠调色板动画
   fold: function () {
     var anim_palette = wx.createAnimation({
       duration: 500,
@@ -477,6 +518,7 @@ Page({
         animC25: anim_c25.export(),*/
     })
   },
+  // 初始化界面
   onLoad: function (e) {
     this.setData({
       Paths: e.Paths,
@@ -491,6 +533,7 @@ Page({
         var originalWidth = res.width;//图片原始宽 
         var originalHeight = res.height;//图片原始高 
         var originalScale = originalHeight / originalWidth;//图片高宽比
+        // 图片有个小BUG，图片位置偏右了
         wx.getSystemInfo({
           success: function (res) {
             // success
@@ -506,13 +549,13 @@ Page({
               imageSize.imageWidth = windowWidth;
               imageSize.imageHeight = (windowWidth * originalHeight) / originalWidth;
               // 路径+左上角x+左上角y+宽度+高度
-              ctx.drawImage(e.Paths, 10, (res.windowHeight - imageSize.imageHeight - 157) / 2, imageSize.imageWidth, imageSize.imageHeight)
+              ctx.drawImage(e.Paths, 0, (res.windowHeight - imageSize.imageHeight - 157) / 2, imageSize.imageWidth, imageSize.imageHeight)
             } else {//图片高宽比大于屏幕高宽比 
               //图片缩放后的高为屏幕高 
               imageSize.imageHeight = windowHeight;
               imageSize.imageWidth = (windowHeight * originalWidth) / originalHeight;
               // 路径+左上角x+左上角y+宽度+高度
-              ctx.drawImage(e.Paths, (res.windowWidth - imageSize.imageWidth) / 2, 10, imageSize.imageWidth, imageSize.imageHeight)
+              ctx.drawImage(e.Paths, (res.windowWidth - imageSize.imageWidth - 20) / 2, 0, imageSize.imageWidth, imageSize.imageHeight)
             }
             ctx.draw()
           }

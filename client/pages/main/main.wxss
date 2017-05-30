@@ -50,6 +50,7 @@ page {
 }
 
 .penSlider {
+  opacity: 0;
   position: fixed;
   bottom: 165rpx;
   left: 10rpx;
