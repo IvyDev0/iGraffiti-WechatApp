@@ -370,24 +370,24 @@ Page({
         timingFunction: 'ease-out'
       })*/
     anim_palette.rotateZ(180).step();
-    anim_c01.translate(10, 55).opacity(1).step();
-    anim_c02.translate(10, 115).opacity(1).step();
-    anim_c03.translate(30, 85).opacity(1).step();
-    anim_c04.translate(50, 55).opacity(1).step();
-    anim_c05.translate(50, 115).opacity(1).step();
-    anim_c06.translate(70, 85).opacity(1).step();
-    anim_c07.translate(90, 55).opacity(1).step();
-    anim_c08.translate(90, 115).opacity(1).step();
-    anim_c09.translate(110, 85).opacity(1).step();
-    anim_c10.translate(130, 55).opacity(1).step();
-    anim_c11.translate(130, 115).opacity(1).step();
-    anim_c12.translate(150, 85).opacity(1).step();
-    anim_c13.translate(170, 55).opacity(1).step();
-    anim_c14.translate(170, 115).opacity(1).step();
-    anim_c15.translate(190, 85).opacity(1).step();
-    anim_c16.translate(210, 55).opacity(1).step();
-    anim_c17.translate(210, 115).opacity(1).step();
-    anim_c18.translate(230, 85).opacity(1).step();
+    anim_c01.translate(-10, -55).opacity(1).step();
+    anim_c02.translate(-10, -115).opacity(1).step();
+    anim_c03.translate(-30, -85).opacity(1).step();
+    anim_c04.translate(-50, -55).opacity(1).step();
+    anim_c05.translate(-50, -115).opacity(1).step();
+    anim_c06.translate(-70, -85).opacity(1).step();
+    anim_c07.translate(-90, -55).opacity(1).step();
+    anim_c08.translate(-90, -115).opacity(1).step();
+    anim_c09.translate(-110, -85).opacity(1).step();
+    anim_c10.translate(-130, -55).opacity(1).step();
+    anim_c11.translate(-130, -115).opacity(1).step();
+    anim_c12.translate(-150, -85).opacity(1).step();
+    anim_c13.translate(-170, -55).opacity(1).step();
+    anim_c14.translate(-170, -115).opacity(1).step();
+    anim_c15.translate(-190, -85).opacity(1).step();
+    anim_c16.translate(-210, -55).opacity(1).step();
+    anim_c17.translate(-210, -115).opacity(1).step();
+    anim_c18.translate(-230, -85).opacity(1).step();
     /*anim_c19.translate(50,410).opacity(1).step();
       anim_c20.translate(10,430).opacity(1).step();
       anim_c21.translate(50,450).opacity(1).step();
@@ -518,32 +518,32 @@ Page({
         duration: 500,
         timingFunction: 'ease-out'
       })*/
-    anim_palette.rotateZ(0).step();
-    anim_c01.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c02.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c03.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c04.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c05.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c06.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c07.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c08.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c09.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c10.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c11.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c12.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c13.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c14.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c15.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c16.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c17.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c18.translate(0, 0).rotateZ(0).opacity(0).step();
-    /*anim_c19.translate(0,0).rotateZ(0).opacity(0).step();
-      anim_c20.translate(0,0).rotateZ(0).opacity(0).step();
-      anim_c21.translate(0,0).rotateZ(0).opacity(0).step();
-      anim_c22.translate(0,0).rotateZ(0).opacity(0).step();
-      anim_c23.translate(0,0).rotateZ(0).opacity(0).step();
-      anim_c24.translate(0,0).rotateZ(0).opacity(0).step();
-      anim_c25.translate(0,0).rotateZ(0).opacity(0).step();*/
+    anim_palette.step();
+    anim_c01.opacity(0).step();
+    anim_c02.opacity(0).step();
+    anim_c03.opacity(0).step();
+    anim_c04.opacity(0).step();
+    anim_c05.opacity(0).step();
+    anim_c06.opacity(0).step();
+    anim_c07.opacity(0).step();
+    anim_c08.opacity(0).step();
+    anim_c09.opacity(0).step();
+    anim_c10.opacity(0).step();
+    anim_c11.opacity(0).step();
+    anim_c12.opacity(0).step();
+    anim_c13.opacity(0).step();
+    anim_c14.opacity(0).step();
+    anim_c15.opacity(0).step();
+    anim_c16.opacity(0).step();
+    anim_c17.opacity(0).step();
+    anim_c18.opacity(0).step();
+    /*anim_c19.translate(0,0).opacity(0).step();
+      anim_c20.translate(0,0).opacity(0).step();
+      anim_c21.translate(0,0).opacity(0).step();
+      anim_c22.translate(0,0).opacity(0).step();
+      anim_c23.translate(0,0).opacity(0).step();
+      anim_c24.translate(0,0).opacity(0).step();
+      anim_c25.translate(0,0).opacity(0).step();*/
     this.setData({
       animPalette: anim_palette.export(),
       animC01: anim_c01.export(), animC02: anim_c02.export(),
