@@ -2,12 +2,16 @@
 //获取应用实例
 var app = getApp()
 const ctx = wx.createCanvasContext('myCanvas')
+// 步数参数，要不要写进page的data里面？
+// var step = 0
 Page({
   data: {
+    step: 0,
     Paths: '',
-    pen: 2,           //画笔粗细默认值
+    pen: 5,           //画笔粗细默认值
     color: '#000000', //画笔颜色默认值
     isPopping: false, //是否已经弹出
+    isPenPopping: false, //画笔滑动条是否弹出
     animPalette: {},  //旋转动画
     //item位移,透明度
     animC01: {}, animC02: {}, animC03: {}, animC04: {}, animC05: {}, animC06: {}, animC07: {}, animC08: {}, animC09: {}, animC10: {}, animC11: {}, animC12: {}, animC13: {}, animC14: {}, animC15: {}, animC16: {}, animC17: {}, animC18: {},
@@ -66,6 +70,79 @@ Page({
   },
   //手指触摸动作结束
   touchEnd: function () {
+    // 为什么单独赋值不能运算
+    var _this = this
+    wx.canvasToTempFilePath({
+      canvasId: 'myCanvas',
+      success: function (res) {
+        // success
+        // 每次画完都要把画完的临时路径发到缓存里
+        // 不知道缓存能存多少东西
+        console.log(res.tempFilePath)
+        console.log(_this.data.step)
+        wx.setStorage({
+          key: _this.data.step.toString(),
+          data: res.tempFilePath,
+        })
+        // 步数+1
+        _this.data.step++
+        // console.log(this.data.step)
+      },
+      fail: function (res) {
+        // fail
+      },
+      complete: function (res) {
+        // complete
+      }
+    })
+    this.setData({
+      step: _this.data.step
+    });
+    console.log(this.data.step)
+  },
+  // 撤销
+  revoke: function () {
+    if (this.data.step >= 1) {
+      this.data.step--
+      var _this = this
+      wx.getStorage({
+        key: _this.data.step.toString(),
+        success: function (res) {
+          console.log(res.data)
+          var imageTempPath = res.data
+          wx.getImageInfo({
+            src: res.data,
+            success: function (res) {
+              console.log("成功获取图片")
+              // 需要再看看保存下来的图片的尺寸
+              ctx.drawImage(imageTempPath, 10, 10, res.height, res.width);
+            }
+          })
+        },
+      })
+      wx.removeStorage({
+        key: _this.data.step.toString(),
+        success: function (res) {
+          console.log("清除成功")
+        },
+      })
+    }
+    else {
+
+    }
+  },
+  saveImage: function () {
+    wx.canvasToTempFilePath({
+      canvasId: 'myCanvas',
+      success: function (res) {
+        wx.saveImageToPhotosAlbum({
+          filePath: res.tempFilePath,
+          success(res) {
+            console.log("保存成功")
+          }
+        })
+      }
+    })
   },
   //启动橡皮擦方法
   clearCanvas: function () {
@@ -74,7 +151,8 @@ Page({
   penSelect: function (e) { //更改画笔大小的方法
     console.log(e.currentTarget);
     this.setData({
-      pen: parseInt(e.currentTarget.dataset.param)
+      // pen: parseInt(e.currentTarget.dataset.param)
+      pen: e.detail.value
     });
     this.isClear = false;
   },
@@ -85,7 +163,10 @@ Page({
     });
     this.isClear = false;
   },
-
+  showPenSlider: function () {
+    if (this.data.isPenPopping) { }
+    else { }
+  },
   palette: function () {
     if (this.data.isPopping) {
       this.fold();
@@ -398,7 +479,8 @@ Page({
   },
   onLoad: function (e) {
     this.setData({
-      Paths: e.Paths
+      Paths: e.Paths,
+      step: 0
     })
     var path = ''
     path = e.Paths

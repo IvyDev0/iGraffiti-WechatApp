@@ -1,4 +1,5 @@
 /**index.wxss**/
+
 .container {
   height: 100%;
   display: flex;
@@ -7,7 +8,7 @@
   justify-content: space-between;
   padding: 200rpx 0;
   box-sizing: border-box;
-} 
+}
 
 .userinfo {
   display: flex;
@@ -31,14 +32,14 @@
 }
 
 .getininfo {
-    position: fixed;
-    left: 0;
-    bottom: 0rpx;
-    width: 100%;
-    height: 300rpx;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+  position: fixed;
+  left: 0;
+  bottom: 0rpx;
+  width: 100%;
+  height: 300rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 .getinfo {
@@ -47,14 +48,14 @@
 }
 
 .image {
-    position: fixed;
-    left: 0;
-    bottom: 0rpx;
-    width: 100%;
-    height: 180rpx;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+  position: fixed;
+  left: 0;
+  bottom: 0rpx;
+  width: 100%;
+  height: 180rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 .camera-icon {

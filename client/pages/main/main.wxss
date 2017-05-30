@@ -5,7 +5,7 @@ page {
 }
 
 .container {
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: 100%;
   top: 0px;
@@ -15,7 +15,7 @@ page {
 }
 
 .canvas_area {
-  position: absolute;
+  position: fixed;
   top: 10px;
   left: 10px;
   right: 10px;
@@ -47,6 +47,13 @@ page {
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
+}
+
+.penSlider {
+  position: fixed;
+  bottom: 165rpx;
+  left: 10rpx;
+  right: 50%;
 }
 
 .pencil {
