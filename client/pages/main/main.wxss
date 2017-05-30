@@ -46,7 +46,7 @@ page {
   margin: 27rpx;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 100% 100%;
+  background-size: 110% 110%;
 }
 
 .penSlider {
@@ -69,7 +69,7 @@ page {
   background-position: center;
   background-size: 100% 100%;
   right: 35rpx;
-  bottom: 35rpx
+  bottom: 30rpx;
 }
 
 .box01 {

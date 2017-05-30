@@ -192,6 +192,13 @@ Page({
     }
     // 防止点击到这里没有响应
     else {
+      // 如果笔显示出来了，那就隐藏掉，避免被遮住
+      if (this.data.isPenPopping) {
+        this.hideSlider();
+        this.setData({
+          isPenPopping: false
+        });
+      }
       this.pop();
       this.setData({
         isPopping: true

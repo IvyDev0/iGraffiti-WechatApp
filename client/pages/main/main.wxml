@@ -11,13 +11,11 @@
     </view>
   </view>
   <view class="canvas_tools">
-    <image bindtap="showPenSlider" class="box" src="../../image/pencil-black.png"></image>
-    <!--待更换图标（撤销、保存）-->
-    <image bindtap="revoke" class="box" src="../../image/pen-black.png"></image>
-    <image bindtap="saveImage" class="box" src="../../image/brush-black.png"></image>
-    <!--待更换图标毕-->
-    <image bindtap="clearCanvas" class="box" src="../../image/eraser-black.png"></image>
-    <image bindtap="palette" class="box" src="../../image/palette-black.png" animation="{{animPalette}}"></image>
+    <image bindtap="showPenSlider" class="box" src="../../image/pencils.png"></image>
+    <image bindtap="revoke" class="box" src="../../image/paperplane.png"></image>
+    <image bindtap="saveImage" class="box" src="../../image/file.png"></image>
+    <image bindtap="clearCanvas" class="box" src="../../image/eraser.png"></image>
+    <image bindtap="palette" class="box" src="../../image/watercolor.png" animation="{{animPalette}}"></image>
     <image bindtap="colorSelect" class="colorbox box01" data-param="#ffc0cb" animation="{{animC01}}"></image>
     <image bindtap="colorSelect" class="colorbox box02" data-param="#ff1493" animation="{{animC02}}"></image>
     <image bindtap="colorSelect" class="colorbox box03" data-param="#ff0000" animation="{{animC03}}"></image>
