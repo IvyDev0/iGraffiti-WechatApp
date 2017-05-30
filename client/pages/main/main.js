@@ -8,10 +8,8 @@ Page({
     Paths: '',
     pen: 5,           //画笔粗细默认值
     color: '#000000', //画笔颜色默认值
-    isPopping: false, //是否已经弹出
-    isPenPopping: false,  //画笔滑动条是否弹出
-    isAnimating: false,   //是否正在调整画笔。如果在不调整（透明度为0），则不改变画笔粗细，但是滑块的值仍然会变，所以需要记录此时滑块的值
-    //因为没有显示画笔滑块时，仍然可以拖动画笔滑块，所以需要记录第一次错误拖动事件和第一次错误拖动时的值，以便显示画笔滑块时能够不改变画笔粗细
+    isPopping: false, //是否已经弹出调色板
+    isPenPopping: false,  //画笔滑动条是否弹出。在不调整画笔滑块时（透明度为0），不会改变画笔粗细，但是滑块的值仍然会变，所以需要记录第一次错误拖动事件和第一次错误拖动时的值，以便显示画笔滑块时能够不改变画笔粗细
     wrongDragValue: 5, //错误（透明度为0时）拖动时的值，默认为5
     wrongDrag: false, //是否存在错误拖动，默认不存在
     animSlider: {},
@@ -160,7 +158,7 @@ Page({
   // 更改画笔大小的方法
   penSelect: function (e) {
     // 正常情况（显示滑条时有拖拉发生），只有在这种情况下才会改变画笔的值
-    if (this.data.isAnimating) {
+    if (this.data.isPenPopping) {
       this.setData({
         // pen: parseInt(e.currentTarget.dataset.param)
         pen: e.detail.value
@@ -168,7 +166,7 @@ Page({
       this.isClear = false;
     }
     // 不正常情况1（没有滑条，没有错误拖拉，但是检测到拖拉发生）
-    else if (!this.data.isAnimating && !this.data.wrongDrag) {
+    else if (!this.data.isPenPopping && !this.data.wrongDrag) {
       this.setData({
         wrongDragValue: this.data.pen,
         wrongDrag: true
@@ -193,6 +191,13 @@ Page({
   // 显示画笔滑条
   showPenSlider: function () {
     console.log(this.data.isPenPopping)
+    // 如果调色板显示出来了那就隐藏掉，避免被遮住
+    if (this.data.isPopping) {
+      this.fold();
+      this.setData({
+        isPopping: false
+      })
+    }
     // 如果存在错误拖拉则在显示画笔滑条时恢复
     // 薛定谔的画笔Get
     if (this.data.wrongDrag) {
@@ -204,20 +209,25 @@ Page({
     if (this.data.isPenPopping) {
       this.hideSlider();
       this.setData({
-        isAnimating: false,
         isPenPopping: false
       });
     }
     else {
       this.showSlider();
       this.setData({
-        isAnimating: true,
         isPenPopping: true
       });
     }
   },
   // 显示调色板
   palette: function () {
+    // 如果笔显示出来了，那就隐藏掉，避免被遮住
+    if (this.data.isPenPopping) {
+      this.hideSlider();
+      this.setData({
+        isPenPopping: false
+      });
+    }
     if (this.data.isPopping) {
       this.fold();
       this.setData({
@@ -360,31 +370,31 @@ Page({
         timingFunction: 'ease-out'
       })*/
     anim_palette.rotateZ(180).step();
-    anim_c01.translate(10, 55).rotateZ(360).opacity(1).step();
-    anim_c02.translate(10, 115).rotateZ(360).opacity(1).step();
-    anim_c03.translate(30, 85).rotateZ(360).opacity(1).step();
-    anim_c04.translate(50, 55).rotateZ(360).opacity(1).step();
-    anim_c05.translate(50, 115).rotateZ(360).opacity(1).step();
-    anim_c06.translate(70, 85).rotateZ(360).opacity(1).step();
-    anim_c07.translate(90, 55).rotateZ(360).opacity(1).step();
-    anim_c08.translate(90, 115).rotateZ(360).opacity(1).step();
-    anim_c09.translate(110, 85).rotateZ(360).opacity(1).step();
-    anim_c10.translate(130, 55).rotateZ(360).opacity(1).step();
-    anim_c11.translate(130, 115).rotateZ(360).opacity(1).step();
-    anim_c12.translate(150, 85).rotateZ(360).opacity(1).step();
-    anim_c13.translate(170, 55).rotateZ(360).opacity(1).step();
-    anim_c14.translate(170, 115).rotateZ(360).opacity(1).step();
-    anim_c15.translate(190, 85).rotateZ(360).opacity(1).step();
-    anim_c16.translate(210, 55).rotateZ(360).opacity(1).step();
-    anim_c17.translate(210, 115).rotateZ(360).opacity(1).step();
-    anim_c18.translate(230, 85).rotateZ(360).opacity(1).step();
-    /*anim_c19.translate(50,410).rotateZ(360).opacity(1).step();
-      anim_c20.translate(10,430).rotateZ(360).opacity(1).step();
-      anim_c21.translate(50,450).rotateZ(360).opacity(1).step();
-      anim_c22.translate(10,470).rotateZ(360).opacity(1).step();
-      anim_c23.translate(50,490).rotateZ(360).opacity(1).step();
-      anim_c24.translate(10,510).rotateZ(360).opacity(1).stepPath();
-      anim_c25.translate(50,530).rotateZ(360).opacity(1).step();*/
+    anim_c01.translate(10, 55).opacity(1).step();
+    anim_c02.translate(10, 115).opacity(1).step();
+    anim_c03.translate(30, 85).opacity(1).step();
+    anim_c04.translate(50, 55).opacity(1).step();
+    anim_c05.translate(50, 115).opacity(1).step();
+    anim_c06.translate(70, 85).opacity(1).step();
+    anim_c07.translate(90, 55).opacity(1).step();
+    anim_c08.translate(90, 115).opacity(1).step();
+    anim_c09.translate(110, 85).opacity(1).step();
+    anim_c10.translate(130, 55).opacity(1).step();
+    anim_c11.translate(130, 115).opacity(1).step();
+    anim_c12.translate(150, 85).opacity(1).step();
+    anim_c13.translate(170, 55).opacity(1).step();
+    anim_c14.translate(170, 115).opacity(1).step();
+    anim_c15.translate(190, 85).opacity(1).step();
+    anim_c16.translate(210, 55).opacity(1).step();
+    anim_c17.translate(210, 115).opacity(1).step();
+    anim_c18.translate(230, 85).opacity(1).step();
+    /*anim_c19.translate(50,410).opacity(1).step();
+      anim_c20.translate(10,430).opacity(1).step();
+      anim_c21.translate(50,450).opacity(1).step();
+      anim_c22.translate(10,470).opacity(1).step();
+      anim_c23.translate(50,490).opacity(1).step();
+      anim_c24.translate(10,510).opacity(1).stepPath();
+      anim_c25.translate(50,530).opacity(1).step();*/
     this.setData({
       animPalette: anim_palette.export(),
       animC01: anim_c01.export(), animC02: anim_c02.export(),

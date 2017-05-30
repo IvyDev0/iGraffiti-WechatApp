@@ -7,12 +7,13 @@
   <view animation="{{animSlider}}" class="penSlider section section_gap">
     <!--<text class="section__title">设置最小/最大值</text>-->
     <view class="body-view">
-      <slider bindchange="penSelect" min="1" max="20" value="{{pen}}" data-animating="{{isAnimating}}" show-value/>
+      <slider bindchange="penSelect" min="1" max="20" value="{{pen}}" show-value/>
     </view>
   </view>
   <view class="canvas_tools">
     <view bindtap="showPenSlider" class="box pencil"></view>
-    <!--待更换图标-->
+    <!--待更换图标，将图片放到本地-->
+    <!--<image bindtap="chooseimage" class="box pen" src="../../image/camera.png"></image>-->
     <view bindtap="revoke" class="box pen"></view>
     <view bindtap="saveImage" class="box brush"></view>
     <!--待更换图标毕-->
