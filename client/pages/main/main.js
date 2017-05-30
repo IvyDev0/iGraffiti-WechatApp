@@ -1,9 +1,7 @@
-//main.js
-//获取应用实例
+// main.js
+// 获取应用实例
 // var app = getApp()
 const ctx = wx.createCanvasContext('myCanvas')
-// 步数参数，要不要写进page的data里面？
-// var step = 0
 Page({
   data: {
     step: 0,
@@ -11,7 +9,11 @@ Page({
     pen: 5,           //画笔粗细默认值
     color: '#000000', //画笔颜色默认值
     isPopping: false, //是否已经弹出
-    isPenPopping: false, //画笔滑动条是否弹出
+    isPenPopping: false,  //画笔滑动条是否弹出
+    isAnimating: false,   //是否正在调整画笔。如果在不调整（透明度为0），则不改变画笔粗细，但是滑块的值仍然会变，所以需要记录此时滑块的值
+    //因为没有显示画笔滑块时，仍然可以拖动画笔滑块，所以需要记录第一次错误拖动事件和第一次错误拖动时的值，以便显示画笔滑块时能够不改变画笔粗细
+    wrongDragValue: 5, //错误（透明度为0时）拖动时的值，默认为5
+    wrongDrag: false, //是否存在错误拖动，默认不存在
     animSlider: {},
     animPalette: {},  //旋转动画
     //item位移,透明度
@@ -22,7 +24,7 @@ Page({
   startY: 0, //保存X坐标轴变量
   isClear: false, //是否启用橡皮擦标记,ture清除,false未启用
 
-  //手指触摸动作开始
+  // 手指触摸动作开始
   touchStart: function (e) {
     //得到触摸点的坐标
     this.startX = e.changedTouches[0].x
@@ -45,7 +47,7 @@ Page({
       this.context.beginPath()
     }
   },
-  //手指触摸后移动
+  // 手指触摸后移动
   touchMove: function (e) {
     var startX1 = e.changedTouches[0].x
     var startY1 = e.changedTouches[0].y
@@ -69,7 +71,7 @@ Page({
       actions: this.context.getActions() // 获取绘图动作数组
     })
   },
-  //手指触摸动作结束
+  // 手指触摸动作结束
   touchEnd: function () {
     // 为什么单独赋值不能运算
     var _this = this
@@ -141,44 +143,75 @@ Page({
           filePath: res.tempFilePath,
           success(res) {
             console.log("保存成功")
+            wx.showToast({
+              title: '保存成功',
+              icon: 'success',
+              duration: 2000
+            })
           }
         })
       }
     })
   },
-  //启动橡皮擦方法
+  // 启动橡皮擦方法
   clearCanvas: function () {
     this.isClear = true;
   },
-  //更改画笔大小的方法
+  // 更改画笔大小的方法
   penSelect: function (e) {
-    console.log(e.currentTarget);
-    this.setData({
-      // pen: parseInt(e.currentTarget.dataset.param)
-      pen: e.detail.value
-    });
-    this.isClear = false;
+    // 正常情况（显示滑条时有拖拉发生），只有在这种情况下才会改变画笔的值
+    if (this.data.isAnimating) {
+      this.setData({
+        // pen: parseInt(e.currentTarget.dataset.param)
+        pen: e.detail.value
+      });
+      this.isClear = false;
+    }
+    // 不正常情况1（没有滑条，没有错误拖拉，但是检测到拖拉发生）
+    else if (!this.data.isAnimating && !this.data.wrongDrag) {
+      this.setData({
+        wrongDragValue: this.data.pen,
+        wrongDrag: true
+      });
+    }
+    // 不正常情况2（没有拖拉，有错误拖拉，检测到错误拖拉）
+    // 不用管这种情况，因为不会改变画笔的值，且已经记录
   },
-  //更改画笔颜色的方法
+  // 更改画笔颜色的方法
   colorSelect: function (e) {
     console.log(e.currentTarget);
     this.setData({
       color: e.currentTarget.dataset.param
     });
     this.isClear = false;
+    wx.showToast({
+      title: '已更改颜色',
+      icon: 'success',
+      duration: 1000
+    })
   },
   // 显示画笔滑条
   showPenSlider: function () {
     console.log(this.data.isPenPopping)
+    // 如果存在错误拖拉则在显示画笔滑条时恢复
+    // 薛定谔的画笔Get
+    if (this.data.wrongDrag) {
+      this.setData({
+        pen: this.data.wrongDragValue,
+        wrongDrag: false
+      });
+    }
     if (this.data.isPenPopping) {
       this.hideSlider();
       this.setData({
+        isAnimating: false,
         isPenPopping: false
       });
     }
     else {
       this.showSlider();
       this.setData({
+        isAnimating: true,
         isPenPopping: true
       });
     }
@@ -533,7 +566,6 @@ Page({
         var originalWidth = res.width;//图片原始宽 
         var originalHeight = res.height;//图片原始高 
         var originalScale = originalHeight / originalWidth;//图片高宽比
-        // 图片有个小BUG，图片位置偏右了
         wx.getSystemInfo({
           success: function (res) {
             // success

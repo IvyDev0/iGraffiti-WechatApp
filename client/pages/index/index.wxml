@@ -7,5 +7,5 @@
   <view class="image">
     <image bindtap="chooseimage" class="camera-icon" src="../../image/camera.png"></image>
   </view>
-  <loading hidden="{{hiddenLoading}}">正在加载</loading>
+  <loading hidden="{{hiddenLoading}}">正在处理图片</loading>
 </view>

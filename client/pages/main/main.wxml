@@ -4,17 +4,13 @@
     <canvas canvas-id="myCanvas" class="myCanvas" disable-scroll="true" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd">
     </canvas>
   </view>
-  <!--<view bindtap="previousStep" class="box back"></view>-->
   <view animation="{{animSlider}}" class="penSlider section section_gap">
     <!--<text class="section__title">设置最小/最大值</text>-->
     <view class="body-view">
-      <slider bindchange="penSelect" min="1" max="20" value="5" show-value/>
+      <slider bindchange="penSelect" min="1" max="20" value="{{pen}}" data-animating="{{isAnimating}}" show-value/>
     </view>
   </view>
   <view class="canvas_tools">
-    <!--<view bindtap="penSelect" class="box pencil" data-param="2"></view>
-    <view bindtap="penSelect" class="box pen" data-param="7"></view>
-    <view bindtap="penSelect" class="box brush" data-param="15"></view>-->
     <view bindtap="showPenSlider" class="box pencil"></view>
     <!--待更换图标-->
     <view bindtap="revoke" class="box pen"></view>
