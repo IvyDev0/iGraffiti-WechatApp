@@ -177,16 +177,26 @@ Page({
   },
   // 更改画笔颜色的方法
   colorSelect: function (e) {
-    console.log(e.currentTarget);
-    this.setData({
-      color: e.currentTarget.dataset.param
-    });
-    this.isClear = false;
-    wx.showToast({
-      title: '已更改颜色',
-      icon: 'success',
-      duration: 1000
-    })
+    // 正常情况（弹出调色板时点击颜色），只在此情况改变画笔的颜色
+    if (this.data.isPopping) {
+      console.log(e.currentTarget);
+      this.setData({
+        color: e.currentTarget.dataset.param
+      });
+      this.isClear = false;
+      wx.showToast({
+        title: '已更改颜色',
+        icon: 'success',
+        duration: 1000
+      })
+    }
+    // 防止点击到这里没有响应
+    else {
+      this.pop();
+      this.setData({
+        isPopping: true
+      })
+    }
   },
   // 显示画笔滑条
   showPenSlider: function () {

@@ -54,7 +54,7 @@ page {
   position: fixed;
   bottom: 165rpx;
   left: 10rpx;
-  right: 50%;
+  right: 38.2%;
 }
 
 .colorbox {
@@ -68,8 +68,8 @@ page {
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
-  right: 25rpx;
-  bottom: 25rpx
+  right: 35rpx;
+  bottom: 35rpx
 }
 
 .box01 {
