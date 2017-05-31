@@ -5,7 +5,6 @@
     </canvas>
   </view>
   <view animation="{{animSlider}}" class="penSlider section section_gap">
-    <!--<text class="section__title">设置最小/最大值</text>-->
     <view class="body-view">
       <slider bindchange="penSelect" min="1" max="20" value="{{pen}}" show-value/>
     </view>
@@ -34,12 +33,5 @@
     <image bindtap="colorSelect" class="colorbox box16" data-param="#800080" animation="{{animC16}}"></image>
     <image bindtap="colorSelect" class="colorbox box17" data-param="#000000" animation="{{animC17}}"></image>
     <image bindtap="colorSelect" class="colorbox box18" data-param="#999999" animation="{{animC18}}"></image>
-    <!--<image bindtap="colorSelect" class="colorbox box19" data-param="#0000ff" animation="{{animC19}}"></image>
-      <image bindtap="colorSelect" class="colorbox box20" data-param="#ff0000" animation="{{animC20}}"></image>
-      <image bindtap="colorSelect" class="colorbox box21" data-param="#ff0000" animation="{{animC21}}"></image>
-      <image bindtap="colorSelect" class="colorbox box22" data-param="#ff0000" animation="{{animC22}}"></image>
-      <image bindtap="colorSelect" class="colorbox box23" data-param="#ff0000" animation="{{animC23}}"></image>
-      <image bindtap="colorSelect" class="colorbox box24" data-param="#ff0000" animation="{{animC24}}"></image>
-      <image bindtap="colorSelect" class="colorbox box25" data-param="#ff0000" animation="{{animC25}}"></image>-->
 </view>
 </view>
