@@ -8,12 +8,11 @@ Page({
     Paths: '',
     pen: 5,           //画笔粗细默认值
     color: '#000000', //画笔颜色默认值
-    isPopping: false, //是否已经弹出
-    isPenPopping: false,  //画笔滑动条是否弹出
-    isAnimating: false,   //是否正在调整画笔。如果在不调整（透明度为0），则不改变画笔粗细，但是滑块的值仍然会变，所以需要记录此时滑块的值
-    //因为没有显示画笔滑块时，仍然可以拖动画笔滑块，所以需要记录第一次错误拖动事件和第一次错误拖动时的值，以便显示画笔滑块时能够不改变画笔粗细
+    isPopping: false, //是否已经弹出调色板
+    isPenPopping: false,  //画笔滑动条是否弹出。在不调整画笔滑块时（透明度为0），不会改变画笔粗细，但是滑块的值仍然会变，所以需要记录第一次错误拖动事件和第一次错误拖动时的值，以便显示画笔滑块时能够不改变画笔粗细
     wrongDragValue: 5, //错误（透明度为0时）拖动时的值，默认为5
     wrongDrag: false, //是否存在错误拖动，默认不存在
+    draw: false, //是否画了。用于删除最后一个无用step
     animSlider: {},
     animPalette: {},  //旋转动画
     //item位移,透明度
@@ -46,6 +45,8 @@ Page({
       this.context.setLineCap('round')
       this.context.beginPath()
     }
+    //画了
+    this.data.draw = true
   },
   // 手指触摸后移动
   touchMove: function (e) {
@@ -74,6 +75,8 @@ Page({
   // 手指触摸动作结束
   touchEnd: function () {
     // 为什么单独赋值不能运算
+    // 步数+1
+    this.data.step++
     var _this = this
     wx.canvasToTempFilePath({
       canvasId: 'myCanvas',
@@ -87,9 +90,6 @@ Page({
           key: _this.data.step.toString(),
           data: res.tempFilePath,
         })
-        // 步数+1
-        _this.data.step++
-        // console.log(this.data.step)
       },
       fail: function (res) {
         // fail
@@ -98,14 +98,19 @@ Page({
         // complete
       }
     })
-    this.setData({
-      step: _this.data.step
-    });
     console.log(this.data.step)
   },
   // 撤销
   revoke: function () {
-    if (this.data.step >= 1) {
+    if (this.data.draw && this.data.step != 0) {
+      wx.removeStorage({
+        key: this.data.step.toString(),
+        success: function (res) {
+          console.log("清除成功")
+        },
+      })
+    }
+    if (this.data.step > 1) {
       this.data.step--
       var _this = this
       wx.getStorage({
@@ -114,24 +119,20 @@ Page({
           console.log(res.data)
           var imageTempPath = res.data
           wx.getImageInfo({
-            src: res.data,
+            src: imageTempPath,
             success: function (res) {
               console.log("成功获取图片")
-              // 需要再看看保存下来的图片的尺寸
-              ctx.drawImage(imageTempPath, 10, 10, res.height, res.width);
+              console.log(res)
+              ctx.drawImage(imageTempPath, 0, 0, res.width, res.height)
+              ctx.draw()
             }
           })
         },
       })
-      wx.removeStorage({
-        key: _this.data.step.toString(),
-        success: function (res) {
-          console.log("清除成功")
-        },
-      })
     }
     else {
-
+      this.data.step = 0
+      this.showOriginPic()
     }
   },
   // 保存图片
@@ -160,7 +161,7 @@ Page({
   // 更改画笔大小的方法
   penSelect: function (e) {
     // 正常情况（显示滑条时有拖拉发生），只有在这种情况下才会改变画笔的值
-    if (this.data.isAnimating) {
+    if (this.data.isPenPopping) {
       this.setData({
         // pen: parseInt(e.currentTarget.dataset.param)
         pen: e.detail.value
@@ -168,7 +169,7 @@ Page({
       this.isClear = false;
     }
     // 不正常情况1（没有滑条，没有错误拖拉，但是检测到拖拉发生）
-    else if (!this.data.isAnimating && !this.data.wrongDrag) {
+    else if (!this.data.isPenPopping && !this.data.wrongDrag) {
       this.setData({
         wrongDragValue: this.data.pen,
         wrongDrag: true
@@ -179,20 +180,44 @@ Page({
   },
   // 更改画笔颜色的方法
   colorSelect: function (e) {
-    console.log(e.currentTarget);
-    this.setData({
-      color: e.currentTarget.dataset.param
-    });
-    this.isClear = false;
-    wx.showToast({
-      title: '已更改颜色',
-      icon: 'success',
-      duration: 1000
-    })
+    // 正常情况（弹出调色板时点击颜色），只在此情况改变画笔的颜色
+    if (this.data.isPopping) {
+      console.log(e.currentTarget);
+      this.setData({
+        color: e.currentTarget.dataset.param
+      });
+      this.isClear = false;
+      wx.showToast({
+        title: '已更改颜色',
+        icon: 'success',
+        duration: 1000
+      })
+    }
+    // 防止点击到这里没有响应
+    else {
+      // 如果笔显示出来了，那就隐藏掉，避免被遮住
+      if (this.data.isPenPopping) {
+        this.hideSlider();
+        this.setData({
+          isPenPopping: false
+        });
+      }
+      this.pop();
+      this.setData({
+        isPopping: true
+      })
+    }
   },
   // 显示画笔滑条
   showPenSlider: function () {
     console.log(this.data.isPenPopping)
+    // 如果调色板显示出来了那就隐藏掉，避免被遮住
+    if (this.data.isPopping) {
+      this.fold();
+      this.setData({
+        isPopping: false
+      })
+    }
     // 如果存在错误拖拉则在显示画笔滑条时恢复
     // 薛定谔的画笔Get
     if (this.data.wrongDrag) {
@@ -204,20 +229,25 @@ Page({
     if (this.data.isPenPopping) {
       this.hideSlider();
       this.setData({
-        isAnimating: false,
         isPenPopping: false
       });
     }
     else {
       this.showSlider();
       this.setData({
-        isAnimating: true,
         isPenPopping: true
       });
     }
   },
   // 显示调色板
   palette: function () {
+    // 如果笔显示出来了，那就隐藏掉，避免被遮住
+    if (this.data.isPenPopping) {
+      this.hideSlider();
+      this.setData({
+        isPenPopping: false
+      });
+    }
     if (this.data.isPopping) {
       this.fold();
       this.setData({
@@ -360,31 +390,31 @@ Page({
         timingFunction: 'ease-out'
       })*/
     anim_palette.rotateZ(180).step();
-    anim_c01.translate(10, 55).rotateZ(360).opacity(1).step();
-    anim_c02.translate(10, 115).rotateZ(360).opacity(1).step();
-    anim_c03.translate(30, 85).rotateZ(360).opacity(1).step();
-    anim_c04.translate(50, 55).rotateZ(360).opacity(1).step();
-    anim_c05.translate(50, 115).rotateZ(360).opacity(1).step();
-    anim_c06.translate(70, 85).rotateZ(360).opacity(1).step();
-    anim_c07.translate(90, 55).rotateZ(360).opacity(1).step();
-    anim_c08.translate(90, 115).rotateZ(360).opacity(1).step();
-    anim_c09.translate(110, 85).rotateZ(360).opacity(1).step();
-    anim_c10.translate(130, 55).rotateZ(360).opacity(1).step();
-    anim_c11.translate(130, 115).rotateZ(360).opacity(1).step();
-    anim_c12.translate(150, 85).rotateZ(360).opacity(1).step();
-    anim_c13.translate(170, 55).rotateZ(360).opacity(1).step();
-    anim_c14.translate(170, 115).rotateZ(360).opacity(1).step();
-    anim_c15.translate(190, 85).rotateZ(360).opacity(1).step();
-    anim_c16.translate(210, 55).rotateZ(360).opacity(1).step();
-    anim_c17.translate(210, 115).rotateZ(360).opacity(1).step();
-    anim_c18.translate(230, 85).rotateZ(360).opacity(1).step();
-    /*anim_c19.translate(50,410).rotateZ(360).opacity(1).step();
-      anim_c20.translate(10,430).rotateZ(360).opacity(1).step();
-      anim_c21.translate(50,450).rotateZ(360).opacity(1).step();
-      anim_c22.translate(10,470).rotateZ(360).opacity(1).step();
-      anim_c23.translate(50,490).rotateZ(360).opacity(1).step();
-      anim_c24.translate(10,510).rotateZ(360).opacity(1).stepPath();
-      anim_c25.translate(50,530).rotateZ(360).opacity(1).step();*/
+    anim_c01.translate(-10, -55).opacity(1).step();
+    anim_c02.translate(-10, -115).opacity(1).step();
+    anim_c03.translate(-30, -85).opacity(1).step();
+    anim_c04.translate(-50, -55).opacity(1).step();
+    anim_c05.translate(-50, -115).opacity(1).step();
+    anim_c06.translate(-70, -85).opacity(1).step();
+    anim_c07.translate(-90, -55).opacity(1).step();
+    anim_c08.translate(-90, -115).opacity(1).step();
+    anim_c09.translate(-110, -85).opacity(1).step();
+    anim_c10.translate(-130, -55).opacity(1).step();
+    anim_c11.translate(-130, -115).opacity(1).step();
+    anim_c12.translate(-150, -85).opacity(1).step();
+    anim_c13.translate(-170, -55).opacity(1).step();
+    anim_c14.translate(-170, -115).opacity(1).step();
+    anim_c15.translate(-190, -85).opacity(1).step();
+    anim_c16.translate(-210, -55).opacity(1).step();
+    anim_c17.translate(-210, -115).opacity(1).step();
+    anim_c18.translate(-230, -85).opacity(1).step();
+    /*anim_c19.translate(50,410).opacity(1).step();
+      anim_c20.translate(10,430).opacity(1).step();
+      anim_c21.translate(50,450).opacity(1).step();
+      anim_c22.translate(10,470).opacity(1).step();
+      anim_c23.translate(50,490).opacity(1).step();
+      anim_c24.translate(10,510).opacity(1).stepPath();
+      anim_c25.translate(50,530).opacity(1).step();*/
     this.setData({
       animPalette: anim_palette.export(),
       animC01: anim_c01.export(), animC02: anim_c02.export(),
@@ -508,32 +538,32 @@ Page({
         duration: 500,
         timingFunction: 'ease-out'
       })*/
-    anim_palette.rotateZ(0).step();
-    anim_c01.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c02.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c03.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c04.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c05.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c06.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c07.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c08.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c09.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c10.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c11.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c12.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c13.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c14.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c15.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c16.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c17.translate(0, 0).rotateZ(0).opacity(0).step();
-    anim_c18.translate(0, 0).rotateZ(0).opacity(0).step();
-    /*anim_c19.translate(0,0).rotateZ(0).opacity(0).step();
-      anim_c20.translate(0,0).rotateZ(0).opacity(0).step();
-      anim_c21.translate(0,0).rotateZ(0).opacity(0).step();
-      anim_c22.translate(0,0).rotateZ(0).opacity(0).step();
-      anim_c23.translate(0,0).rotateZ(0).opacity(0).step();
-      anim_c24.translate(0,0).rotateZ(0).opacity(0).step();
-      anim_c25.translate(0,0).rotateZ(0).opacity(0).step();*/
+    anim_palette.step();
+    anim_c01.opacity(0).step();
+    anim_c02.opacity(0).step();
+    anim_c03.opacity(0).step();
+    anim_c04.opacity(0).step();
+    anim_c05.opacity(0).step();
+    anim_c06.opacity(0).step();
+    anim_c07.opacity(0).step();
+    anim_c08.opacity(0).step();
+    anim_c09.opacity(0).step();
+    anim_c10.opacity(0).step();
+    anim_c11.opacity(0).step();
+    anim_c12.opacity(0).step();
+    anim_c13.opacity(0).step();
+    anim_c14.opacity(0).step();
+    anim_c15.opacity(0).step();
+    anim_c16.opacity(0).step();
+    anim_c17.opacity(0).step();
+    anim_c18.opacity(0).step();
+    /*anim_c19.translate(0,0).opacity(0).step();
+      anim_c20.translate(0,0).opacity(0).step();
+      anim_c21.translate(0,0).opacity(0).step();
+      anim_c22.translate(0,0).opacity(0).step();
+      anim_c23.translate(0,0).opacity(0).step();
+      anim_c24.translate(0,0).opacity(0).step();
+      anim_c25.translate(0,0).opacity(0).step();*/
     this.setData({
       animPalette: anim_palette.export(),
       animC01: anim_c01.export(), animC02: anim_c02.export(),
@@ -551,14 +581,65 @@ Page({
         animC25: anim_c25.export(),*/
     })
   },
+  // 显示原始图片
+  showOriginPic: function() {
+    wx.getStorage({
+      key: '0',
+      success: function (res) {
+        console.log(res.data)
+        // 画图（待补充）
+        var path = res.data.path
+        wx.getImageInfo({
+          src: path,
+          success: function (res) {
+            // success
+            var originalWidth = res.width;//图片原始宽 
+            var originalHeight = res.height;//图片原始高 
+            var originalScale = originalHeight / originalWidth;//图片高宽比
+            wx.getSystemInfo({
+              success: function (res) {
+                // success
+                var imageSize = {};
+                // 左右留白各10
+                var windowWidth = res.windowWidth - 20;
+                // 去掉最高157+留白上10下10
+                var windowHeight = res.windowHeight - 177;
+                // 显示区域高宽比
+                var windowscale = windowHeight / windowWidth
+                if (originalScale < windowscale) {//图片高宽比小于屏幕高宽比 
+                  //图片缩放后的宽为屏幕宽 
+                  imageSize.imageWidth = windowWidth;
+                  imageSize.imageHeight = (windowWidth * originalHeight) / originalWidth;
+                  // 路径+左上角x+左上角y+宽度+高度
+                  ctx.drawImage(path, 0, (res.windowHeight - imageSize.imageHeight - 157) / 2, imageSize.imageWidth, imageSize.imageHeight)
+                } else {//图片高宽比大于屏幕高宽比 
+                  //图片缩放后的高为屏幕高 
+                  imageSize.imageHeight = windowHeight;
+                  imageSize.imageWidth = (windowHeight * originalWidth) / originalHeight;
+                  // 路径+左上角x+左上角y+宽度+高度
+                  ctx.drawImage(path, (res.windowWidth - imageSize.imageWidth - 20) / 2, 0, imageSize.imageWidth, imageSize.imageHeight)
+                }
+                ctx.draw()
+              }
+            })
+          },
+          fail: function (res) {
+            // fail
+          },
+          complete: function (res) {
+            // complete
+          }
+        })
+      }
+    })
+  },
   // 初始化界面
   onLoad: function (e) {
     this.setData({
       Paths: e.Paths,
-      step: 0
     })
-    var path = ''
-    path = e.Paths
+    wx.clearStorage()
+    var path = e.Paths
     wx.getImageInfo({
       src: path,
       success: function (res) {
@@ -570,6 +651,8 @@ Page({
           success: function (res) {
             // success
             var imageSize = {};
+            var img = {};
+            img.path = path
             // 左右留白各10
             var windowWidth = res.windowWidth - 20;
             // 去掉最高157+留白上10下10
@@ -582,13 +665,26 @@ Page({
               imageSize.imageHeight = (windowWidth * originalHeight) / originalWidth;
               // 路径+左上角x+左上角y+宽度+高度
               ctx.drawImage(e.Paths, 0, (res.windowHeight - imageSize.imageHeight - 157) / 2, imageSize.imageWidth, imageSize.imageHeight)
+              // img.X = 0
+              // img.Y = (res.windowHeight - imageSize.imageHeight - 157) / 2
+              // img.Width = imageSize.imageWidth
+              // img.Height = imageSize.imageHeight
             } else {//图片高宽比大于屏幕高宽比 
               //图片缩放后的高为屏幕高 
               imageSize.imageHeight = windowHeight;
               imageSize.imageWidth = (windowHeight * originalWidth) / originalHeight;
               // 路径+左上角x+左上角y+宽度+高度
               ctx.drawImage(e.Paths, (res.windowWidth - imageSize.imageWidth - 20) / 2, 0, imageSize.imageWidth, imageSize.imageHeight)
+              // img.X = (res.windowWidth - imageSize.imageWidth - 20) / 2
+              // img.Y = 0
+              // img.Width = imageSize.imageWidth
+              // img.Height = imageSize.imageHeight
             }
+            wx.setStorage({
+              key: '0',
+              data: img,
+            })
+            //console.log(ctx)
             ctx.draw()
           }
         })

@@ -7,42 +7,39 @@
   <view animation="{{animSlider}}" class="penSlider section section_gap">
     <!--<text class="section__title">设置最小/最大值</text>-->
     <view class="body-view">
-      <slider bindchange="penSelect" min="1" max="20" value="{{pen}}" data-animating="{{isAnimating}}" show-value/>
+      <slider bindchange="penSelect" min="1" max="20" value="{{pen}}" show-value/>
     </view>
   </view>
   <view class="canvas_tools">
-    <view bindtap="showPenSlider" class="box pencil"></view>
-    <!--待更换图标-->
-    <view bindtap="revoke" class="box pen"></view>
-    <view bindtap="saveImage" class="box brush"></view>
-    <!--待更换图标毕-->
-    <view bindtap="clearCanvas" class="box eraser"></view>
-    <view bindtap="palette" class="box palette" animation="{{animPalette}}">
-      <image bindtap="colorSelect" class="colorbox box01" data-param="#ffc0cb" animation="{{animC01}}"></image>
-      <image bindtap="colorSelect" class="colorbox box02" data-param="#ff1493" animation="{{animC02}}"></image>
-      <image bindtap="colorSelect" class="colorbox box03" data-param="#ff0000" animation="{{animC03}}"></image>
-      <image bindtap="colorSelect" class="colorbox box04" data-param="#990000" animation="{{animC04}}"></image>
-      <image bindtap="colorSelect" class="colorbox box05" data-param="#ffa500" animation="{{animC05}}"></image>
-      <image bindtap="colorSelect" class="colorbox box06" data-param="#ffff00" animation="{{animC06}}"></image>
-      <image bindtap="colorSelect" class="colorbox box07" data-param="#ffff90" animation="{{animC07}}"></image>
-      <image bindtap="colorSelect" class="colorbox box08" data-param="#adff2f" animation="{{animC08}}"></image>
-      <image bindtap="colorSelect" class="colorbox box09" data-param="#00ff00" animation="{{animC09}}"></image>
-      <image bindtap="colorSelect" class="colorbox box10" data-param="#008000" animation="{{animC10}}"></image>
-      <image bindtap="colorSelect" class="colorbox box11" data-param="#00fa9a" animation="{{animC11}}"></image>
-      <image bindtap="colorSelect" class="colorbox box12" data-param="#00ffff" animation="{{animC12}}"></image>
-      <image bindtap="colorSelect" class="colorbox box13" data-param="#00bfff" animation="{{animC13}}"></image>
-      <image bindtap="colorSelect" class="colorbox box14" data-param="#0000ff" animation="{{animC14}}"></image>
-      <image bindtap="colorSelect" class="colorbox box15" data-param="#9932cc" animation="{{animC15}}"></image>
-      <image bindtap="colorSelect" class="colorbox box16" data-param="#800080" animation="{{animC16}}"></image>
-      <image bindtap="colorSelect" class="colorbox box17" data-param="#000000" animation="{{animC17}}"></image>
-      <image bindtap="colorSelect" class="colorbox box18" data-param="#999999" animation="{{animC18}}"></image>
-      <!--<image bindtap="colorSelect" class="colorbox box19" data-param="#0000ff" animation="{{animC19}}"></image>
+    <image bindtap="showPenSlider" class="box" src="../../image/pencils.png"></image>
+    <image bindtap="revoke" class="box" src="../../image/paperplane.png"></image>
+    <image bindtap="saveImage" class="box" src="../../image/file.png"></image>
+    <image bindtap="clearCanvas" class="box" src="../../image/eraser.png"></image>
+    <image bindtap="palette" class="box" src="../../image/watercolor.png" animation="{{animPalette}}"></image>
+    <image bindtap="colorSelect" class="colorbox box01" data-param="#ffc0cb" animation="{{animC01}}"></image>
+    <image bindtap="colorSelect" class="colorbox box02" data-param="#ff1493" animation="{{animC02}}"></image>
+    <image bindtap="colorSelect" class="colorbox box03" data-param="#ff0000" animation="{{animC03}}"></image>
+    <image bindtap="colorSelect" class="colorbox box04" data-param="#990000" animation="{{animC04}}"></image>
+    <image bindtap="colorSelect" class="colorbox box05" data-param="#ffa500" animation="{{animC05}}"></image>
+    <image bindtap="colorSelect" class="colorbox box06" data-param="#ffff00" animation="{{animC06}}"></image>
+    <image bindtap="colorSelect" class="colorbox box07" data-param="#ffff90" animation="{{animC07}}"></image>
+    <image bindtap="colorSelect" class="colorbox box08" data-param="#adff2f" animation="{{animC08}}"></image>
+    <image bindtap="colorSelect" class="colorbox box09" data-param="#00ff00" animation="{{animC09}}"></image>
+    <image bindtap="colorSelect" class="colorbox box10" data-param="#008000" animation="{{animC10}}"></image>
+    <image bindtap="colorSelect" class="colorbox box11" data-param="#00fa9a" animation="{{animC11}}"></image>
+    <image bindtap="colorSelect" class="colorbox box12" data-param="#00ffff" animation="{{animC12}}"></image>
+    <image bindtap="colorSelect" class="colorbox box13" data-param="#00bfff" animation="{{animC13}}"></image>
+    <image bindtap="colorSelect" class="colorbox box14" data-param="#0000ff" animation="{{animC14}}"></image>
+    <image bindtap="colorSelect" class="colorbox box15" data-param="#9932cc" animation="{{animC15}}"></image>
+    <image bindtap="colorSelect" class="colorbox box16" data-param="#800080" animation="{{animC16}}"></image>
+    <image bindtap="colorSelect" class="colorbox box17" data-param="#000000" animation="{{animC17}}"></image>
+    <image bindtap="colorSelect" class="colorbox box18" data-param="#999999" animation="{{animC18}}"></image>
+    <!--<image bindtap="colorSelect" class="colorbox box19" data-param="#0000ff" animation="{{animC19}}"></image>
       <image bindtap="colorSelect" class="colorbox box20" data-param="#ff0000" animation="{{animC20}}"></image>
       <image bindtap="colorSelect" class="colorbox box21" data-param="#ff0000" animation="{{animC21}}"></image>
       <image bindtap="colorSelect" class="colorbox box22" data-param="#ff0000" animation="{{animC22}}"></image>
       <image bindtap="colorSelect" class="colorbox box23" data-param="#ff0000" animation="{{animC23}}"></image>
       <image bindtap="colorSelect" class="colorbox box24" data-param="#ff0000" animation="{{animC24}}"></image>
       <image bindtap="colorSelect" class="colorbox box25" data-param="#ff0000" animation="{{animC25}}"></image>-->
-    </view>
-  </view>
+</view>
 </view>

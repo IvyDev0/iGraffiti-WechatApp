@@ -46,7 +46,7 @@ page {
   margin: 27rpx;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 100% 100%;
+  background-size: 110% 110%;
 }
 
 .penSlider {
@@ -54,28 +54,7 @@ page {
   position: fixed;
   bottom: 165rpx;
   left: 10rpx;
-  right: 50%;
-}
-
-.pencil {
-  background-image: url('https://www.pihuataotao.cn/pencil-black.png');
-}
-
-.pen {
-  background-image: url('https://www.pihuataotao.cn/pen-black.png');
-}
-
-.brush {
-  background-image: url('https://www.pihuataotao.cn/brush-black.png');
-}
-
-.eraser {
-  background-image: url('https://www.pihuataotao.cn/eraser-black.png');
-}
-
-.palette {
-  background-image: url('https://www.pihuataotao.cn/palette-black.png');
-  z-index: 100;
+  right: 38.2%;
 }
 
 .colorbox {
@@ -89,6 +68,8 @@ page {
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
+  right: 35rpx;
+  bottom: 30rpx;
 }
 
 .box01 {
