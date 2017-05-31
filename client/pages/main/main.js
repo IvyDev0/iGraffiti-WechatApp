@@ -82,8 +82,7 @@ Page({
       canvasId: 'myCanvas',
       success: function (res) {
         // success
-        // 每次画完都要把画完的临时路径发到缓存里
-        // 不知道缓存能存多少东西
+        // 每次画完都要把画完的临时路径发到缓存里，缓存上限未知
         console.log(res.tempFilePath)
         console.log(_this.data.step)
         wx.setStorage({
@@ -361,34 +360,6 @@ Page({
       duration: 500,
       timingFunction: 'ease-out'
     })
-    /*var anim_c19 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })
-      var anim_c20 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })
-      var anim_c21 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })
-      var anim_c22 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })
-      var anim_c23 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })
-      var anim_c24 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })
-      var anim_c25 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })*/
     anim_palette.rotateZ(180).step();
     anim_c01.translate(-10, -55).opacity(1).step();
     anim_c02.translate(-10, -115).opacity(1).step();
@@ -408,13 +379,6 @@ Page({
     anim_c16.translate(-210, -55).opacity(1).step();
     anim_c17.translate(-210, -115).opacity(1).step();
     anim_c18.translate(-230, -85).opacity(1).step();
-    /*anim_c19.translate(50,410).opacity(1).step();
-      anim_c20.translate(10,430).opacity(1).step();
-      anim_c21.translate(50,450).opacity(1).step();
-      anim_c22.translate(10,470).opacity(1).step();
-      anim_c23.translate(50,490).opacity(1).step();
-      anim_c24.translate(10,510).opacity(1).stepPath();
-      anim_c25.translate(50,530).opacity(1).step();*/
     this.setData({
       animPalette: anim_palette.export(),
       animC01: anim_c01.export(), animC02: anim_c02.export(),
@@ -426,10 +390,6 @@ Page({
       animC13: anim_c13.export(), animC14: anim_c14.export(),
       animC15: anim_c15.export(), animC16: anim_c16.export(),
       animC17: anim_c17.export(), animC18: anim_c18.export(),
-      /*animC19: anim_c19.export(), animC20: anim_c20.export(),
-        animC21: anim_c21.export(), animC22: anim_c22.export(),
-        animC23: anim_c23.export(), animC24: anim_c24.export(),
-        animC25: anim_c25.export(),*/
     })
   },
   // 折叠调色板动画
@@ -510,34 +470,6 @@ Page({
       duration: 500,
       timingFunction: 'ease-out'
     })
-    /*var anim_c19 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })
-      var anim_c20 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })
-      var anim_c21 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })
-      var anim_c22 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })
-      var anim_c23 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })
-      var anim_c24 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })
-      var anim_c25 = wx.createAnimation({
-        duration: 500,
-        timingFunction: 'ease-out'
-      })*/
     anim_palette.step();
     anim_c01.opacity(0).step();
     anim_c02.opacity(0).step();
@@ -557,13 +489,6 @@ Page({
     anim_c16.opacity(0).step();
     anim_c17.opacity(0).step();
     anim_c18.opacity(0).step();
-    /*anim_c19.translate(0,0).opacity(0).step();
-      anim_c20.translate(0,0).opacity(0).step();
-      anim_c21.translate(0,0).opacity(0).step();
-      anim_c22.translate(0,0).opacity(0).step();
-      anim_c23.translate(0,0).opacity(0).step();
-      anim_c24.translate(0,0).opacity(0).step();
-      anim_c25.translate(0,0).opacity(0).step();*/
     this.setData({
       animPalette: anim_palette.export(),
       animC01: anim_c01.export(), animC02: anim_c02.export(),
@@ -575,10 +500,6 @@ Page({
       animC13: anim_c13.export(), animC14: anim_c14.export(),
       animC15: anim_c15.export(), animC16: anim_c16.export(),
       animC17: anim_c17.export(), animC18: anim_c18.export(),
-      /*animC19: anim_c19.export(), animC20: anim_c20.export(),
-        animC21: anim_c21.export(), animC22: anim_c22.export(),
-        animC23: anim_c23.export(), animC24: anim_c24.export(),
-        animC25: anim_c25.export(),*/
     })
   },
   // 显示原始图片
@@ -588,7 +509,7 @@ Page({
       success: function (res) {
         console.log(res.data)
         // 画图（待补充）
-        var path = res.data.path
+        var path = res.data
         wx.getImageInfo({
           src: path,
           success: function (res) {
@@ -640,61 +561,10 @@ Page({
     })
     wx.clearStorage()
     var path = e.Paths
-    wx.getImageInfo({
-      src: path,
-      success: function (res) {
-        // success
-        var originalWidth = res.width;//图片原始宽 
-        var originalHeight = res.height;//图片原始高 
-        var originalScale = originalHeight / originalWidth;//图片高宽比
-        wx.getSystemInfo({
-          success: function (res) {
-            // success
-            var imageSize = {};
-            var img = {};
-            img.path = path
-            // 左右留白各10
-            var windowWidth = res.windowWidth - 20;
-            // 去掉最高157+留白上10下10
-            var windowHeight = res.windowHeight - 177;
-            // 显示区域高宽比
-            var windowscale = windowHeight / windowWidth
-            if (originalScale < windowscale) {//图片高宽比小于屏幕高宽比 
-              //图片缩放后的宽为屏幕宽 
-              imageSize.imageWidth = windowWidth;
-              imageSize.imageHeight = (windowWidth * originalHeight) / originalWidth;
-              // 路径+左上角x+左上角y+宽度+高度
-              ctx.drawImage(e.Paths, 0, (res.windowHeight - imageSize.imageHeight - 157) / 2, imageSize.imageWidth, imageSize.imageHeight)
-              // img.X = 0
-              // img.Y = (res.windowHeight - imageSize.imageHeight - 157) / 2
-              // img.Width = imageSize.imageWidth
-              // img.Height = imageSize.imageHeight
-            } else {//图片高宽比大于屏幕高宽比 
-              //图片缩放后的高为屏幕高 
-              imageSize.imageHeight = windowHeight;
-              imageSize.imageWidth = (windowHeight * originalWidth) / originalHeight;
-              // 路径+左上角x+左上角y+宽度+高度
-              ctx.drawImage(e.Paths, (res.windowWidth - imageSize.imageWidth - 20) / 2, 0, imageSize.imageWidth, imageSize.imageHeight)
-              // img.X = (res.windowWidth - imageSize.imageWidth - 20) / 2
-              // img.Y = 0
-              // img.Width = imageSize.imageWidth
-              // img.Height = imageSize.imageHeight
-            }
-            wx.setStorage({
-              key: '0',
-              data: img,
-            })
-            //console.log(ctx)
-            ctx.draw()
-          }
-        })
-      },
-      fail: function (res) {
-        // fail
-      },
-      complete: function (res) {
-        // complete
-      }
+    wx.setStorage({
+      key: '0',
+      data: path,
     })
+    this.showOriginPic()
   }
 })
