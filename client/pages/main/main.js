@@ -12,6 +12,7 @@ Page({
     isPenPopping: false,  //画笔滑动条是否弹出。在不调整画笔滑块时（透明度为0），不会改变画笔粗细，但是滑块的值仍然会变，所以需要记录第一次错误拖动事件和第一次错误拖动时的值，以便显示画笔滑块时能够不改变画笔粗细
     wrongDragValue: 5, //错误（透明度为0时）拖动时的值，默认为5
     wrongDrag: false, //是否存在错误拖动，默认不存在
+    draw: false, //是否画了。用于删除最后一个无用step
     animSlider: {},
     animPalette: {},  //旋转动画
     //item位移,透明度
@@ -44,6 +45,8 @@ Page({
       this.context.setLineCap('round')
       this.context.beginPath()
     }
+    //画了
+    this.data.draw = true
   },
   // 手指触摸后移动
   touchMove: function (e) {
@@ -72,6 +75,8 @@ Page({
   // 手指触摸动作结束
   touchEnd: function () {
     // 为什么单独赋值不能运算
+    // 步数+1
+    this.data.step++
     var _this = this
     wx.canvasToTempFilePath({
       canvasId: 'myCanvas',
@@ -85,9 +90,6 @@ Page({
           key: _this.data.step.toString(),
           data: res.tempFilePath,
         })
-        // 步数+1
-        _this.data.step++
-        // console.log(this.data.step)
       },
       fail: function (res) {
         // fail
@@ -96,14 +98,19 @@ Page({
         // complete
       }
     })
-    this.setData({
-      step: _this.data.step
-    });
     console.log(this.data.step)
   },
   // 撤销
   revoke: function () {
-    if (this.data.step >= 1) {
+    if (this.data.draw) {
+      wx.removeStorage({
+        key: this.data.step.toString(),
+        success: function (res) {
+          console.log("清除成功")
+        },
+      })
+    }
+    if (this.data.step > 1) {
       this.data.step--
       var _this = this
       wx.getStorage({
@@ -112,11 +119,12 @@ Page({
           console.log(res.data)
           var imageTempPath = res.data
           wx.getImageInfo({
-            src: res.data,
+            src: imageTempPath,
             success: function (res) {
               console.log("成功获取图片")
-              // 需要再看看保存下来的图片的尺寸
-              ctx.drawImage(imageTempPath, 10, 10, res.height, res.width);
+              console.log(res)
+              ctx.drawImage(imageTempPath, 0, 0, res.width, res.height)
+              ctx.draw()
             }
           })
         },
@@ -129,7 +137,15 @@ Page({
       })
     }
     else {
-
+      wx.getStorage({
+        key: '0',
+        success: function (res) {
+          console.log(res.data)
+          // 画图（待补充）
+          ctx.drawImage(res.data.path, res.data.X, res.data.Y, res.data.width, res.data.height)
+          ctx.draw()
+        }
+      })
     }
   },
   // 保存图片
@@ -582,10 +598,9 @@ Page({
   onLoad: function (e) {
     this.setData({
       Paths: e.Paths,
-      step: 0
     })
-    var path = ''
-    path = e.Paths
+    wx.clearStorage()
+    var path = e.Paths
     wx.getImageInfo({
       src: path,
       success: function (res) {
@@ -597,6 +612,8 @@ Page({
           success: function (res) {
             // success
             var imageSize = {};
+            var img = {};
+            img.path = path
             // 左右留白各10
             var windowWidth = res.windowWidth - 20;
             // 去掉最高157+留白上10下10
@@ -609,13 +626,26 @@ Page({
               imageSize.imageHeight = (windowWidth * originalHeight) / originalWidth;
               // 路径+左上角x+左上角y+宽度+高度
               ctx.drawImage(e.Paths, 0, (res.windowHeight - imageSize.imageHeight - 157) / 2, imageSize.imageWidth, imageSize.imageHeight)
+              img.X = 0
+              img.Y = (res.windowHeight - imageSize.imageHeight - 157) / 2
+              img.Width = imageSize.imageWidth
+              img.Height = imageSize.imageHeight
             } else {//图片高宽比大于屏幕高宽比 
               //图片缩放后的高为屏幕高 
               imageSize.imageHeight = windowHeight;
               imageSize.imageWidth = (windowHeight * originalWidth) / originalHeight;
               // 路径+左上角x+左上角y+宽度+高度
               ctx.drawImage(e.Paths, (res.windowWidth - imageSize.imageWidth - 20) / 2, 0, imageSize.imageWidth, imageSize.imageHeight)
+              img.X = (res.windowWidth - imageSize.imageWidth - 20) / 2
+              img.Y = 0
+              img.Width = imageSize.imageWidth
+              img.Height = imageSize.imageHeight
             }
+            wx.setStorage({
+              key: '0',
+              data: img,
+            })
+            //console.log(ctx)
             ctx.draw()
           }
         })
