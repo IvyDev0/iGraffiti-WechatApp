@@ -102,7 +102,7 @@ Page({
   },
   // 撤销
   revoke: function () {
-    if (this.data.draw) {
+    if (this.data.draw && this.data.step != 0) {
       wx.removeStorage({
         key: this.data.step.toString(),
         success: function (res) {
@@ -129,23 +129,10 @@ Page({
           })
         },
       })
-      wx.removeStorage({
-        key: _this.data.step.toString(),
-        success: function (res) {
-          console.log("清除成功")
-        },
-      })
     }
     else {
-      wx.getStorage({
-        key: '0',
-        success: function (res) {
-          console.log(res.data)
-          // 画图（待补充）
-          ctx.drawImage(res.data.path, res.data.X, res.data.Y, res.data.width, res.data.height)
-          ctx.draw()
-        }
-      })
+      this.data.step = 0
+      this.showOriginPic()
     }
   },
   // 保存图片
@@ -594,6 +581,58 @@ Page({
         animC25: anim_c25.export(),*/
     })
   },
+  // 显示原始图片
+  showOriginPic: function() {
+    wx.getStorage({
+      key: '0',
+      success: function (res) {
+        console.log(res.data)
+        // 画图（待补充）
+        var path = res.data.path
+        wx.getImageInfo({
+          src: path,
+          success: function (res) {
+            // success
+            var originalWidth = res.width;//图片原始宽 
+            var originalHeight = res.height;//图片原始高 
+            var originalScale = originalHeight / originalWidth;//图片高宽比
+            wx.getSystemInfo({
+              success: function (res) {
+                // success
+                var imageSize = {};
+                // 左右留白各10
+                var windowWidth = res.windowWidth - 20;
+                // 去掉最高157+留白上10下10
+                var windowHeight = res.windowHeight - 177;
+                // 显示区域高宽比
+                var windowscale = windowHeight / windowWidth
+                if (originalScale < windowscale) {//图片高宽比小于屏幕高宽比 
+                  //图片缩放后的宽为屏幕宽 
+                  imageSize.imageWidth = windowWidth;
+                  imageSize.imageHeight = (windowWidth * originalHeight) / originalWidth;
+                  // 路径+左上角x+左上角y+宽度+高度
+                  ctx.drawImage(path, 0, (res.windowHeight - imageSize.imageHeight - 157) / 2, imageSize.imageWidth, imageSize.imageHeight)
+                } else {//图片高宽比大于屏幕高宽比 
+                  //图片缩放后的高为屏幕高 
+                  imageSize.imageHeight = windowHeight;
+                  imageSize.imageWidth = (windowHeight * originalWidth) / originalHeight;
+                  // 路径+左上角x+左上角y+宽度+高度
+                  ctx.drawImage(path, (res.windowWidth - imageSize.imageWidth - 20) / 2, 0, imageSize.imageWidth, imageSize.imageHeight)
+                }
+                ctx.draw()
+              }
+            })
+          },
+          fail: function (res) {
+            // fail
+          },
+          complete: function (res) {
+            // complete
+          }
+        })
+      }
+    })
+  },
   // 初始化界面
   onLoad: function (e) {
     this.setData({
@@ -626,20 +665,20 @@ Page({
               imageSize.imageHeight = (windowWidth * originalHeight) / originalWidth;
               // 路径+左上角x+左上角y+宽度+高度
               ctx.drawImage(e.Paths, 0, (res.windowHeight - imageSize.imageHeight - 157) / 2, imageSize.imageWidth, imageSize.imageHeight)
-              img.X = 0
-              img.Y = (res.windowHeight - imageSize.imageHeight - 157) / 2
-              img.Width = imageSize.imageWidth
-              img.Height = imageSize.imageHeight
+              // img.X = 0
+              // img.Y = (res.windowHeight - imageSize.imageHeight - 157) / 2
+              // img.Width = imageSize.imageWidth
+              // img.Height = imageSize.imageHeight
             } else {//图片高宽比大于屏幕高宽比 
               //图片缩放后的高为屏幕高 
               imageSize.imageHeight = windowHeight;
               imageSize.imageWidth = (windowHeight * originalWidth) / originalHeight;
               // 路径+左上角x+左上角y+宽度+高度
               ctx.drawImage(e.Paths, (res.windowWidth - imageSize.imageWidth - 20) / 2, 0, imageSize.imageWidth, imageSize.imageHeight)
-              img.X = (res.windowWidth - imageSize.imageWidth - 20) / 2
-              img.Y = 0
-              img.Width = imageSize.imageWidth
-              img.Height = imageSize.imageHeight
+              // img.X = (res.windowWidth - imageSize.imageWidth - 20) / 2
+              // img.Y = 0
+              // img.Width = imageSize.imageWidth
+              // img.Height = imageSize.imageHeight
             }
             wx.setStorage({
               key: '0',
