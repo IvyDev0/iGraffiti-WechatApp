@@ -3,6 +3,7 @@
 // var app = getApp()
 const ctx = wx.createCanvasContext('myCanvas')
 Page({
+  
   data: {
     step: 0,
     Paths: '',
@@ -22,6 +23,26 @@ Page({
   startX: 0, //保存X坐标轴变量
   startY: 0, //保存X坐标轴变量
   isClear: false, //是否启用橡皮擦标记,ture清除,false未启用
+  img:'',
+
+  onShareAppMessage: function () {
+    return {
+      title: '分享到朋友圈',
+      path: '/pages/main/main',
+      success: function (res) {
+
+        // 转发成功
+        wx.showToast({
+          title: '分享成功',
+          icon: 'success',
+          duration: 2000
+        })
+      },
+      fail: function (res) {
+        // 转发失败
+      }
+    }
+  },
 
   // 手指触摸动作开始
   touchStart: function (e) {
@@ -84,6 +105,7 @@ Page({
         // success
         // 每次画完都要把画完的临时路径发到缓存里，缓存上限未知
         console.log(res.tempFilePath)
+        img = res.tempFilePath;
         console.log(_this.data.step)
         wx.setStorage({
           key: _this.data.step.toString(),
