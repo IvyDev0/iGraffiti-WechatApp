@@ -27,7 +27,7 @@ Page({
 
   onShareAppMessage: function () {
     return {
-      title: '分享到朋友圈',
+      title: '分享到微信',
       path: '/pages/main/main',
       success: function (res) {
 
